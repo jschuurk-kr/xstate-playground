@@ -1,5 +1,7 @@
 # xstate playground
 
+Run with `npx playwright test`.
+
 ## references
 https://dev.to/ryanroselloog/model-based-testing-using-playwright-and-xstate-what-ive-learnt-so-far-4180
 

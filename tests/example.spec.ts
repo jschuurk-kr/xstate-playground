@@ -13,7 +13,11 @@ const machine = createTestMachine({
         CLICK_DOCS: 'apiPage',
       },
     },
-    introPage: {},
+    introPage: {
+      on : {
+      CLICK_DOCS: 'apiPage'
+      }
+    },
     apiPage: {}
   },
 });
@@ -41,7 +45,7 @@ test.describe("My app", () => {
               page.getByRole("link", {name: "Get started"}).click()
             },
             CLICK_DOCS: async () => {
-              page.getByRole("link", {name: "API"}).click()
+              page.getByRole("link", {name: /^API$/}).click()
             }
           },
           
