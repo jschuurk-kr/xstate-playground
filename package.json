@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@xstate/graph": "^3.0.0",
     "@xstate/test": "^1.0.0-beta.5",
     "xstate": "^5.19.0"
   },

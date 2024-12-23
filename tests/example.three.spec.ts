@@ -1,9 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { createMachine } from "xstate";
-import { createTestModel, createTestMachine } from "@xstate/test";
+import { createTestModel } from "@xstate/graph";
+import { test } from './fixtures';
 
 
-const machine = createTestMachine({
+const machine = createMachine({
   id: 'documentSearch',
   initial: 'onHomePage',
   states: {
@@ -15,10 +16,16 @@ const machine = createTestMachine({
     },
     introPage: {
       on : {
-      CLICK_DOCS: 'apiPage'
+        CLICK_DOCS: 'apiPage',
+        CLICK_HOME: 'onHomePage'
       }
     },
-    apiPage: {}
+    apiPage: {
+      // this breaks the tests
+      on: {
+        CLICK_HOME: 'onHomePage'
+      }
+    }
   },
 });
 
@@ -26,11 +33,10 @@ test.describe("My app", () => {
   createTestModel(machine)
     .getSimplePaths()
     .forEach((path) => {
-      test(path.description, async ({ page }) => {
+      test(path.description, async ({ page, homePage }) => {
         await path.test({
           states: {
             onHomePage: async () => {
-              await page.goto('https://playwright.dev/');
               await expect(page).toHaveTitle(/Playwright/);
             },
             introPage: async () => {
@@ -46,6 +52,9 @@ test.describe("My app", () => {
             },
             CLICK_DOCS: async () => {
               page.getByRole("link", {name: /^API$/}).click()
+            },
+            CLICK_HOME: async () => {
+              page.getByRole("link", {name: /^Playwright logo Playwright$/}).click()
             }
           },
           
